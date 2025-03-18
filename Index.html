@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Presentes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://source.unsplash.com/1080x1920/?wedding,romantic'); /* Ajustado para fundo vertical */
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            background: rgba(0, 0, 0, 0.6);
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 10px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 15px;
+            margin: 10px auto;
+            border-radius: 10px;
+            width: 90%;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+        input {
+            margin-left: 10px;
+            padding: 8px;
+            border-radius: 5px;
+            border: none;
+            flex: 1;
+        }
+        button {
+            background-color: #ff4081;
+            color: white;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 5px;
+            border: none;
+        }
+        .item-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <h1>Escolha um presente</h1>
+    <ul id="lista-presentes"></ul>
+    <script>
+        const sheetId = "1-S2AG5T04sDE1WLBNU9fEK3HNZjxhI8Jzg6sEWOknT8";
+        const apiKey = "AIzaSyD9sGvEuqQ-nT8zPi_OtRVpymMNDrCX2pk";
+        const range = "Página1!A2:C"; // Pega os dados da planilha ignorando os títulos
+        
+        async function carregarPresentes() {
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                console.log("Dados da planilha:", data);
+                
+                const lista = document.getElementById("lista-presentes");
+                lista.innerHTML = "";
+                
+                if (data.values) {
+                    data.values.forEach((linha, index) => {
+                        const [presente, valor, escolhido] = linha;
+                        if (!escolhido || escolhido.toLowerCase() === "vazio no início") {
+                            const item = document.createElement("li");
+                            item.innerHTML = `<div class="item-container"><strong>${presente}</strong> - ${valor} 
+                                <input type="text" id="nome-${index}" placeholder="Seu nome"> 
+                                <button onclick="reservarPresente(${index}, '${presente}')">Escolher</button></div>`;
+                            lista.appendChild(item);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error("Erro ao carregar dados:", error);
+            }
+        }
+        
+        async function reservarPresente(index, presente) {
+            const nomeInput = document.getElementById(`nome-${index}`);
+            const nome = nomeInput.value.trim();
+            if (!nome) {
+                alert("Por favor, digite seu nome antes de escolher o presente.");
+                return;
+            }
+            
+            alert(`Obrigado, ${nome}! Você escolheu: ${presente}`);
+            // Aqui deveria ser enviada a atualização para o Google Sheets (precisamos configurar um backend para isso)
+        }
+        
+        carregarPresentes();
+    </script>
+</body>
+</html>
