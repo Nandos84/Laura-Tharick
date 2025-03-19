@@ -16,13 +16,15 @@
             padding: 20px;
         }
         .header, .footer {
+            width: 100%;
             text-align: center;
-            padding: 10px;
         }
         .header img, .footer img {
-            max-width: 100%;
+            width: 100%;
             height: auto;
-            border-radius: 10px;
+            max-height: 200px; /* Ajuste conforme necessário */
+            object-fit: cover;
+            border-radius: 0; /* Remove arredondamento para manter alinhamento */
         }
         h1 {
             background: rgba(0, 0, 0, 0.6);
@@ -91,12 +93,15 @@
     <div class="header">
         <img src="https://raw.githubusercontent.com/Nandos84/K-e-F/refs/heads/main/cabecalho.png" alt="Cabeçalho">
     </div>
+
     <h1>Escolha um presente</h1>
     <ul id="lista-presentes"></ul>
+
     <div class="footer">
-        <img src="https://seu-usuario.github.io/seu-repositorio/main/rodapé.png" alt="Rodapé">
+        <img src="https://raw.githubusercontent.com/Nandos84/K-e-F/refs/heads/main/rodape%CC%81.png" alt="Rodapé">
         <p class="footer-text">Obrigado por participar da nossa celebração!</p>
     </div>
+
     <script>
         const sheetId = "1-S2AG5T04sDE1WLBNU9fEK3HNZjxhI8Jzg6sEWOknT8";
         const apiKey = "AIzaSyD9sGvEuqQ-nT8zPi_OtRVpymMNDrCX2pk";
