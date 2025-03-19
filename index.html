@@ -32,16 +32,37 @@
             border-radius: 10px;
             width: 90%;
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             align-items: center;
-            justify-content: space-between;
+        }
+        .presente-img {
+            width: 100px;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        .info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .presente-nome {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .presente-valor {
+            font-size: 16px;
+            color: #ffd700;
+            margin-bottom: 10px;
         }
         input {
-            margin-left: 10px;
+            width: 90%;
             padding: 8px;
             border-radius: 5px;
             border: none;
-            flex: 1;
+            margin-bottom: 5px;
         }
         button {
             background-color: #335039;
@@ -50,12 +71,6 @@
             padding: 8px;
             border-radius: 5px;
             border: none;
-        }
-        .item-container {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            justify-content: space-between;
         }
     </style>
 </head>
@@ -69,70 +84,71 @@
         const scriptUrl = "https://script.google.com/macros/s/AKfycbz6IUqon_x1uYA-j7AM42STKHgKQpuL6mfcxLYLrIP_ykTYwIRB6IbNyvRR4_-yqpSZ/exec";
         
         async function carregarPresentes() {
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-        console.log("Dados da planilha:", data);
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                console.log("Dados da planilha:", data);
 
-        const lista = document.getElementById("lista-presentes");
-        lista.innerHTML = "";
+                const lista = document.getElementById("lista-presentes");
+                lista.innerHTML = "";
 
-        if (data.values) {
-            data.values.forEach((linha, index) => {
-                const [presente, valor, escolhido, imagem] = linha;
-                if (!escolhido || escolhido.toLowerCase() === "vazio no início") {
-                    const item = document.createElement("li");
-                    item.innerHTML = `
-                        <div class="item-container">
-                            <img src="${imagem}" alt="${presente}" style="width: 80px; height: 80px; border-radius: 10px; object-fit: cover; margin-right: 10px;">
-                            <strong>${presente}</strong> - ${valor} 
-                            <input type="text" id="nome-${index}" placeholder="Seu nome"> 
-                            <button onclick="reservarPresente(${index}, '${presente}')">Escolher</button>
-                        </div>`;
-                    lista.appendChild(item);
+                if (data.values) {
+                    data.values.forEach((linha, index) => {
+                        const [presente, valor, escolhido, imagem] = linha;
+
+                        if (!escolhido || escolhido.toLowerCase() === "vazio no início") {
+                            const item = document.createElement("li");
+                            const imagemSrc = imagem && imagem.trim() !== "" ? imagem : "https://via.placeholder.com/80x80?text=Imagem+Indisponível";
+
+                            item.innerHTML = `
+                                <img src="${imagemSrc}" alt="${presente}" class="presente-img" onerror="this.src='https://via.placeholder.com/80x80?text=Imagem+Indisponível'">
+                                <div class="info">
+                                    <strong class="presente-nome">${presente}</strong>
+                                    <span class="presente-valor">Valor: ${valor}</span>
+                                    <input type="text" id="nome-${index}" placeholder="Seu nome"> 
+                                    <button onclick="reservarPresente(${index}, '${presente}')">Escolher</button>
+                                </div>`;
+                            lista.appendChild(item);
+                        }
+                    });
                 }
-            });
+            } catch (error) {
+                console.error("Erro ao carregar dados:", error);
+            }
         }
-    } catch (error) {
-        console.error("Erro ao carregar dados:", error);
-    }
-}
-        
+
         async function reservarPresente(index, presente) {
-    const nomeInput = document.getElementById(`nome-${index}`);
-    const nome = nomeInput.value.trim();
-    
-    if (!nome) {
-        alert("Por favor, digite seu nome antes de escolher o presente.");
-        return;
-    }
+            const nomeInput = document.getElementById(`nome-${index}`);
+            const nome = nomeInput.value.trim();
 
-    const scriptURL = "https://script.google.com/macros/s/AKfycbw5i6WV6c0gUxWyAg7xOJ29JOHGMQ1ve6YrTAUmyEDPoBj8QXFD0S1d-nerMoReYYqS/exec";
-    
-    const params = new URLSearchParams();
-    params.append("presente", presente);
-    params.append("nome", nome);
-    
-    try {
-        const response = await fetch(`${scriptURL}?${params.toString()}`, {
-            method: "GET", // Ou "POST" se ajustarmos no Apps Script
-        });
+            if (!nome) {
+                alert("Por favor, digite seu nome antes de escolher o presente.");
+                return;
+            }
 
-        const data = await response.json();
-        if (data.status === "sucesso") {
-            alert(`Obrigado, ${nome}! Você escolheu: ${presente}`);
-            carregarPresentes(); // Atualiza a lista para remover o item escolhido
-        } else {
-            alert("Erro ao registrar escolha. Tente novamente.");
+            const scriptURL = "https://script.google.com/macros/s/AKfycbw5i6WV6c0gUxWyAg7xOJ29JOHGMQ1ve6YrTAUmyEDPoBj8QXFD0S1d-nerMoReYYqS/exec";
+            const params = new URLSearchParams();
+            params.append("presente", presente);
+            params.append("nome", nome);
+
+            try {
+                const response = await fetch(`${scriptURL}?${params.toString()}`, {
+                    method: "GET",
+                });
+                const data = await response.json();
+                if (data.status === "sucesso") {
+                    alert(`Obrigado, ${nome}! Você escolheu: ${presente}`);
+                    carregarPresentes();
+                } else {
+                    alert("Erro ao registrar escolha. Tente novamente.");
+                }
+            } catch (error) {
+                console.error("Erro ao reservar presente:", error);
+                alert("Falha ao comunicar com o servidor.");
+            }
         }
-    } catch (error) {
-        console.error("Erro ao reservar presente:", error);
-        alert("Falha ao comunicar com o servidor.");
-    }
-}
 
-        
         carregarPresentes();
     </script>
 </body>
