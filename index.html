@@ -13,28 +13,36 @@
             background-attachment: fixed;
             color: #fff;
             text-align: center;
-            padding: 20px;
+            padding: 0;
+            margin: 0;
         }
         .header, .footer {
+            position: absolute;
+            left: 0;
             width: 100%;
-            text-align: center;
+        }
+        .header {
+            top: 0;
+        }
+        .footer {
+            bottom: 0;
         }
         .header img, .footer img {
             width: 100%;
             height: auto;
-            max-height: 200px; /* Ajuste conforme necessário */
             object-fit: cover;
-            border-radius: 0; /* Remove arredondamento para manter alinhamento */
         }
         h1 {
             background: rgba(0, 0, 0, 0.6);
             display: inline-block;
             padding: 10px 20px;
             border-radius: 10px;
+            margin-top: 220px;
         }
         ul {
             list-style: none;
             padding: 0;
+            margin: 0;
         }
         li {
             background: rgba(0, 0, 0, 0.6);
@@ -98,87 +106,8 @@
     <ul id="lista-presentes"></ul>
 
     <div class="footer">
-        <img src="https://github.com/Nandos84/K-e-F/blob/main/rodape.png?raw=true" alt="Rodapé">
+        <img src="https://raw.githubusercontent.com/Nandos84/K-e-F/refs/heads/main/rodape.png" alt="Rodapé">
         <p class="footer-text">Obrigado por participar da nossa celebração!</p>
     </div>
-
-    <script>
-        const sheetId = "1-S2AG5T04sDE1WLBNU9fEK3HNZjxhI8Jzg6sEWOknT8";
-        const apiKey = "AIzaSyD9sGvEuqQ-nT8zPi_OtRVpymMNDrCX2pk";
-        const range = "Página1!A2:D";
-        
-        async function carregarPresentes() {
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                console.log("Dados da planilha:", data);
-
-                const lista = document.getElementById("lista-presentes");
-                lista.innerHTML = "";
-
-                if (data.values) {
-                    data.values.forEach((linha, index) => {
-                        const [presente, valor, escolhido, imagem] = linha;
-
-                        if (!escolhido || escolhido.toLowerCase() === "vazio no início") {
-                            const item = document.createElement("li");
-                            const imagemSrc = imagem && imagem.trim() !== "" ? imagem : "https://via.placeholder.com/80x80?text=Imagem+Indispon%C3%ADvel";
-
-                            item.innerHTML = `
-                                <div class="item-container">
-                                    <img src="${imagemSrc}" alt="${presente}" onerror="this.classList.add('error')">
-                                    <div class="info-container">
-                                        <strong>${presente}</strong> - ${valor}
-                                        <div class="input-container">
-                                            <input type="text" id="nome-${index}" placeholder="Seu nome"> 
-                                            <button onclick="reservarPresente(${index}, '${presente}')">Escolher</button>
-                                        </div>
-                                    </div>
-                                </div>`;
-                            lista.appendChild(item);
-                        }
-                    });
-                }
-            } catch (error) {
-                console.error("Erro ao carregar dados:", error);
-            }
-        }
-
-        async function reservarPresente(index, presente) {
-            const nomeInput = document.getElementById(`nome-${index}`);
-            const nome = nomeInput.value.trim();
-
-            if (!nome) {
-                alert("Por favor, digite seu nome antes de escolher o presente.");
-                return;
-            }
-
-            const scriptURL = "https://script.google.com/macros/s/AKfycbw5i6WV6c0gUxWyAg7xOJ29JOHGMQ1ve6YrTAUmyEDPoBj8QXFD0S1d-nerMoReYYqS/exec";
-
-            const params = new URLSearchParams();
-            params.append("presente", presente);
-            params.append("nome", nome);
-
-            try {
-                const response = await fetch(`${scriptURL}?${params.toString()}`, {
-                    method: "GET",
-                });
-
-                const data = await response.json();
-                if (data.status === "sucesso") {
-                    alert(`Obrigado, ${nome}! Você escolheu: ${presente}`);
-                    carregarPresentes(); 
-                } else {
-                    alert("Erro ao registrar escolha. Tente novamente.");
-                }
-            } catch (error) {
-                console.error("Erro ao reservar presente:", error);
-                alert("Falha ao comunicar com o servidor.");
-            }
-        }
-
-        carregarPresentes();
-    </script>
 </body>
 </html>
