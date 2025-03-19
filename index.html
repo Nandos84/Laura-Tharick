@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-image: url('https://github.com/Nandos84/K-e-F/blob/main/fundo.png?raw=true');
+            background-image: url('main/fundo.png');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -44,7 +44,7 @@
             flex: 1;
         }
         button {
-            background-color: #ff4081;
+            background-color: #335039;
             color: white;
             cursor: pointer;
             padding: 8px;
@@ -65,35 +65,39 @@
     <script>
         const sheetId = "1-S2AG5T04sDE1WLBNU9fEK3HNZjxhI8Jzg6sEWOknT8";
         const apiKey = "AIzaSyD9sGvEuqQ-nT8zPi_OtRVpymMNDrCX2pk";
-        const range = "Página1!A2:C";
+        const range = "Página1!A2:D";
         const scriptUrl = "https://script.google.com/macros/s/AKfycbz6IUqon_x1uYA-j7AM42STKHgKQpuL6mfcxLYLrIP_ykTYwIRB6IbNyvRR4_-yqpSZ/exec";
         
         async function carregarPresentes() {
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                console.log("Dados da planilha:", data);
-                
-                const lista = document.getElementById("lista-presentes");
-                lista.innerHTML = "";
-                
-                if (data.values) {
-                    data.values.forEach((linha, index) => {
-                        const [presente, valor, escolhido] = linha;
-                        if (!escolhido || escolhido.toLowerCase() === "vazio no início") {
-                            const item = document.createElement("li");
-                            item.innerHTML = `<div class="item-container"><strong>${presente}</strong> - ${valor} 
-                                <input type="text" id="nome-${index}" placeholder="Seu nome"> 
-                                <button onclick="reservarPresente(${index}, '${presente}')">Escolher</button></div>`;
-                            lista.appendChild(item);
-                        }
-                    });
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        console.log("Dados da planilha:", data);
+
+        const lista = document.getElementById("lista-presentes");
+        lista.innerHTML = "";
+
+        if (data.values) {
+            data.values.forEach((linha, index) => {
+                const [presente, valor, escolhido, imagem] = linha;
+                if (!escolhido || escolhido.toLowerCase() === "vazio no início") {
+                    const item = document.createElement("li");
+                    item.innerHTML = `
+                        <div class="item-container">
+                            <img src="${imagem}" alt="${presente}" style="width: 80px; height: 80px; border-radius: 10px; object-fit: cover; margin-right: 10px;">
+                            <strong>${presente}</strong> - ${valor} 
+                            <input type="text" id="nome-${index}" placeholder="Seu nome"> 
+                            <button onclick="reservarPresente(${index}, '${presente}')">Escolher</button>
+                        </div>`;
+                    lista.appendChild(item);
                 }
-            } catch (error) {
-                console.error("Erro ao carregar dados:", error);
-            }
+            });
         }
+    } catch (error) {
+        console.error("Erro ao carregar dados:", error);
+    }
+}
         
         async function reservarPresente(index, presente) {
     const nomeInput = document.getElementById(`nome-${index}`);
