@@ -15,6 +15,15 @@
             text-align: center;
             padding: 20px;
         }
+        .header, .footer {
+            text-align: center;
+            padding: 10px;
+        }
+        .header img, .footer img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
         h1 {
             background: rgba(0, 0, 0, 0.6);
             display: inline-block;
@@ -72,11 +81,22 @@
         img.error {
             content: url('https://via.placeholder.com/80x80?text=Imagem+Indispon%C3%ADvel');
         }
+        .footer-text {
+            margin-top: 10px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
+    <div class="header">
+        <img src="main/cabecalho.png" alt="Cabeçalho">
+    </div>
     <h1>Escolha um presente</h1>
     <ul id="lista-presentes"></ul>
+    <div class="footer">
+        <img src="main/rodape.png" alt="Rodapé">
+        <p class="footer-text">Obrigado por participar da nossa celebração!</p>
+    </div>
     <script>
         const sheetId = "1-S2AG5T04sDE1WLBNU9fEK3HNZjxhI8Jzg6sEWOknT8";
         const apiKey = "AIzaSyD9sGvEuqQ-nT8zPi_OtRVpymMNDrCX2pk";
