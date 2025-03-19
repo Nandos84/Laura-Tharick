@@ -31,38 +31,29 @@
             margin: 10px auto;
             border-radius: 10px;
             width: 90%;
+        }
+        .item-container {
             display: flex;
-            flex-direction: column;
             align-items: center;
         }
-        .presente-img {
-            width: 100px;
-            height: auto;
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
-        .info {
+        .info-container {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            text-align: center;
+            align-items: flex-start;
+            margin-left: 10px;
+            flex: 1;
         }
-        .presente-nome {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .presente-valor {
-            font-size: 16px;
-            color: #ffd700;
-            margin-bottom: 10px;
+        .input-container {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            margin-top: 10px;
         }
         input {
-            width: 90%;
             padding: 8px;
             border-radius: 5px;
             border: none;
-            margin-bottom: 5px;
+            flex: 1;
         }
         button {
             background-color: #335039;
@@ -71,6 +62,15 @@
             padding: 8px;
             border-radius: 5px;
             border: none;
+        }
+        img {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+        img.error {
+            content: url('https://via.placeholder.com/80x80?text=Imagem+Indispon%C3%ADvel');
         }
     </style>
 </head>
@@ -81,7 +81,6 @@
         const sheetId = "1-S2AG5T04sDE1WLBNU9fEK3HNZjxhI8Jzg6sEWOknT8";
         const apiKey = "AIzaSyD9sGvEuqQ-nT8zPi_OtRVpymMNDrCX2pk";
         const range = "Página1!A2:D";
-        const scriptUrl = "https://script.google.com/macros/s/AKfycbz6IUqon_x1uYA-j7AM42STKHgKQpuL6mfcxLYLrIP_ykTYwIRB6IbNyvRR4_-yqpSZ/exec";
         
         async function carregarPresentes() {
             const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
@@ -99,15 +98,18 @@
 
                         if (!escolhido || escolhido.toLowerCase() === "vazio no início") {
                             const item = document.createElement("li");
-                            const imagemSrc = imagem && imagem.trim() !== "" ? imagem : "https://via.placeholder.com/80x80?text=Imagem+Indisponível";
+                            const imagemSrc = imagem && imagem.trim() !== "" ? imagem : "https://via.placeholder.com/80x80?text=Imagem+Indispon%C3%ADvel";
 
                             item.innerHTML = `
-                                <img src="${imagemSrc}" alt="${presente}" class="presente-img" onerror="this.src='https://via.placeholder.com/80x80?text=Imagem+Indisponível'">
-                                <div class="info">
-                                    <strong class="presente-nome">${presente}</strong>
-                                    <span class="presente-valor">Valor: ${valor}</span>
-                                    <input type="text" id="nome-${index}" placeholder="Seu nome"> 
-                                    <button onclick="reservarPresente(${index}, '${presente}')">Escolher</button>
+                                <div class="item-container">
+                                    <img src="${imagemSrc}" alt="${presente}" onerror="this.classList.add('error')">
+                                    <div class="info-container">
+                                        <strong>${presente}</strong> - ${valor}
+                                        <div class="input-container">
+                                            <input type="text" id="nome-${index}" placeholder="Seu nome"> 
+                                            <button onclick="reservarPresente(${index}, '${presente}')">Escolher</button>
+                                        </div>
+                                    </div>
                                 </div>`;
                             lista.appendChild(item);
                         }
@@ -128,6 +130,7 @@
             }
 
             const scriptURL = "https://script.google.com/macros/s/AKfycbw5i6WV6c0gUxWyAg7xOJ29JOHGMQ1ve6YrTAUmyEDPoBj8QXFD0S1d-nerMoReYYqS/exec";
+
             const params = new URLSearchParams();
             params.append("presente", presente);
             params.append("nome", nome);
@@ -136,10 +139,11 @@
                 const response = await fetch(`${scriptURL}?${params.toString()}`, {
                     method: "GET",
                 });
+
                 const data = await response.json();
                 if (data.status === "sucesso") {
                     alert(`Obrigado, ${nome}! Você escolheu: ${presente}`);
-                    carregarPresentes();
+                    carregarPresentes(); 
                 } else {
                     alert("Erro ao registrar escolha. Tente novamente.");
                 }
