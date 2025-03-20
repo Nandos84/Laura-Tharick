@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Presentes</title>
     <style>
+        :root {
+            --font-size: 16px;
+        }
+        
         body {
             font-family: Arial, sans-serif;
             background-image: url('main/fundo.png');
@@ -15,6 +19,7 @@
             text-align: center;
             padding: 0;
             margin: 0;
+            font-size: var(--font-size);
         }
         .header, .footer {
             position: relative;
@@ -26,12 +31,11 @@
             object-fit: cover;
         }
         h1 {
-            background: rgba(0, 0, 0, 0.6);
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
+    	   background: rgba(0, 0, 0, 0);
+   	   font-size: calc(var(--font-size) + 0px);
+   	   font-family: 'Arial', sans-serif;
+       	   color: #404040;
+	}
         ul {
             list-style: none;
             padding: 0;
@@ -44,6 +48,7 @@
             margin: 10px auto;
             border-radius: 10px;
             width: 90%;
+            font-size: calc(var(--font-size) - 2px);
         }
         .item-container {
             display: flex;
@@ -67,6 +72,7 @@
             border-radius: 5px;
             border: none;
             flex: 1;
+            font-size: var(--font-size);
         }
         button {
             background-color: #335039;
@@ -75,6 +81,7 @@
             padding: 8px;
             border-radius: 5px;
             border: none;
+            font-size: var(--font-size);
         }
         img {
             width: 80px;
@@ -86,8 +93,8 @@
             content: url('https://via.placeholder.com/80x80?text=Imagem+Indispon%C3%ADvel');
         }
         .footer-text {
-            margin-top: 0px;
-            font-size: 18px;
+            margin-top: 14px;
+            font-size: calc(var(--font-size) - 2px);
             color: #404040;
         }
     </style>
