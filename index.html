@@ -6,97 +6,112 @@
     <title>Lista de Presentes</title>
     <style>
         :root {
-            --font-size: 12px;
+            --font-size: 16px; /* Mantido para boa legibilidade no celular */
         }
         
         body {
             font-family: Arial, sans-serif;
-            background-color: #fffafa; /* Cor de fundo */
-            background-image: none; /* Removido o background-image para que a cor de fundo seja visível */
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: fffafa;
+            background-color: #fffafa; 
+            background-image: none;
+            color: #333; 
             text-align: center;
             padding: 0;
             margin: 0;
             font-size: var(--font-size);
+            line-height: 1.5; 
         }
         .header, .footer {
             position: relative;
             width: 100%;
         }
-        .header img, .footer img {
+        .header img {
             width: 100%;
             height: auto;
             object-fit: cover;
         }
         h1 {
-            background: rgba(0, 0, 0, 0);
-            font-size: calc(var(--font-size) + 0px);
+            font-size: 1.8em; 
             font-family: 'Arial', sans-serif;
             color: #404040;
+            margin: 20px 10px;
         }
         ul {
             list-style: none;
             padding: 0;
             margin: 20px auto;
-            width: 90%;
+            width: 95%; 
+            max-width: 600px; 
         }
         li {
             background: salmon;
+            color: #fffafa;
             padding: 15px;
             margin: 10px auto;
             border-radius: 10px;
-            width: 90%;
-            font-size: calc(var(--font-size) - 2px);
+            text-align: left; 
         }
         .item-container {
             display: flex;
             align-items: center;
+            gap: 15px; 
         }
         .info-container {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            margin-left: 10px;
             flex: 1;
         }
         .input-container {
             display: flex;
+            flex-direction: row; /* <-- ALTERADO para linha */
             gap: 10px;
             width: 100%;
             margin-top: 10px;
         }
+
         input {
-            padding: 8px;
-            border-radius: 5_px;
+            padding: 12px;
+            font-size: 1.1em;
+            border-radius: 5px;
             border: none;
-            flex: 1;
-            font-size: var(--font-size);
+            flex: 1; /* <-- ALTERADO de 'width: 100%' para 'flex: 1' */
+            box-sizing: border-box; 
         }
+
+
         button {
-            background-color: #ab7836;
-            color: white;
-            cursor: pointer;
             padding: 8px;
             border-radius: 5px;
             border: none;
-            font-size: var(--font-size);
+            font-size: 1em; 
+            width: auto;
+            align-self: flex-end;
+            box-sizing: border-box; 
+            background-color: #ab7836;
+            color: white;
+            cursor: pointer;
         }
         img {
             width: 80px;
             height: 80px;
             border-radius: 10px;
             object-fit: cover;
+            flex-shrink: 0; 
         }
         img.error {
             content: url('https://via.placeholder.com/80x80?text=Imagem+Indispon%C3%ADvel');
         }
         .footer-text {
-            margin-top: 14px;
-            font-size: calc(var(--font-size) - 2px);
+            padding: 20px;
+            font-size: 0.9em;
             color: #404040;
+        }
+
+        /* Otimização para telas maiores (como tablets e desktops) */
+        @media (min-width: 480px) {
+            .input-container {
+                flex-direction: row; 
+            }
         }
     </style>
 </head>
@@ -104,6 +119,7 @@
     <div class="header">
         <img src="https://github.com/Nandos84/K-e-F/blob/main/cabecalho.png?raw=true" alt="Cabeçalho">
     </div>
+
 
     <ul id="lista-presentes"></ul>
 
@@ -137,7 +153,8 @@
                                 <div class="item-container">
                                     <img src="${imagemSrc}" alt="${presente}" onerror="this.classList.add('error')">
                                     <div class="info-container">
-                                        <strong>${presente}</strong> ${valor}
+                                        <strong>${presente}</strong>
+                                        <span>${valor}</span>
                                         <div class="input-container">
                                             <input type="text" id="nome-${index}" placeholder="Seu nome"> 
                                             <button onclick="reservarPresente(${index}, '${presente}')">Escolher</button>
