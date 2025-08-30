@@ -11,7 +11,8 @@
         
         body {
             font-family: Arial, sans-serif;
-            background-image: url('main/fundo.png');
+            background-color: salmon; /* Cor de fundo alterada para salmão */
+            background-image: none; /* Removido o background-image para que a cor de fundo seja visível */
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -31,11 +32,11 @@
             object-fit: cover;
         }
         h1 {
-    	   background: rgba(0, 0, 0, 0);
-   	   font-size: calc(var(--font-size) + 0px);
-   	   font-family: 'Arial', sans-serif;
-       	   color: #404040;
-	}
+            background: rgba(0, 0, 0, 0);
+            font-size: calc(var(--font-size) + 0px);
+            font-family: 'Arial', sans-serif;
+            color: #404040;
+        }
         ul {
             list-style: none;
             padding: 0;
@@ -69,7 +70,7 @@
         }
         input {
             padding: 8px;
-            border-radius: 5px;
+            border-radius: 5_px;
             border: none;
             flex: 1;
             font-size: var(--font-size);
@@ -108,7 +109,6 @@
     <ul id="lista-presentes"></ul>
 
     <div class="footer">
-        <img src="https://github.com/Nandos84/K-e-F/blob/main/rodape%20pix.png?raw=true" alt="rodapé">
         <p class="footer-text">Obrigado por participar da nossa celebração!</p>
     </div>
 
